@@ -1,0 +1,47 @@
+syntax = "proto3";
+//package wallet;
+
+option java_multiple_files = true;
+option java_package = "br.com.sergio.wallet";
+option java_outer_classname = "WalletProto";
+option objc_class_prefix = "WLT";
+
+package wallet;
+
+service Operations {
+    rpc Deposit(OperationInput) returns (OperationOutput);
+    rpc Withdraw(OperationInput) returns (OperationOutput);
+    rpc Balance(BalanceInput) returns (BalanceOutput);
+}
+
+enum Currency {
+    EUR = 0;
+    USD = 1;
+    GBP = 2;
+}
+
+enum Response {
+    OK = 0;
+    UNKNOWN_CURRENCY = 1;
+}
+
+message OperationInput {
+    uint32 user_id = 1;
+    double amount = 2;
+    Currency currency = 3;
+}
+
+message OperationOutput {
+    Response response = 1;
+}
+
+message BalanceInput {
+    uint32 user_id = 1;
+}
+
+message BalanceOutput {
+    double eur = 1;
+    double usd = 2;
+    double gbp = 3;
+}
+
