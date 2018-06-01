@@ -69,14 +69,14 @@ task runClient(type: JavaExec) {
 
 startScripts.enabled = false
 
-task helloWorldServer(type: CreateStartScripts) {
-    mainClassName = "br.com.sergio.wallet.HelloWorldServer"
+task walletServer(type: CreateStartScripts) {
+    mainClassName = "br.com.sergio.wallet.WalletServer"
     applicationName = "wallet-server"
     outputDir = new File(project.buildDir, 'tmp')
     classpath = jar.outputs.files + project.configurations.runtime
 }
 
-task helloWorldClient(type: CreateStartScripts) {
+task walletClient(type: CreateStartScripts) {
     mainClassName = "br.com.sergio.wallet.WalletClient"
     applicationName = "wallet-client"
     outputDir = new File(project.buildDir, 'tmp')
@@ -84,7 +84,7 @@ task helloWorldClient(type: CreateStartScripts) {
 }
 
 applicationDistribution.into("bin") {
-    from(helloWorldServer)
-    from(helloWorldClient)
+    from(walletServer)
+    from(walletClient)
     fileMode = 0755
 }
