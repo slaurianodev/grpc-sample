@@ -57,7 +57,9 @@ public class WalletServer {
     private class OperationsGrpcImpl extends OperationsGrpc.OperationsImplBase {
         @Override
         public void deposit(OperationInput request,StreamObserver<OperationOutput> responseObserver) {
-            asyncUnimplementedUnaryCall(OperationsGrpc.getDepositMethod(), responseObserver);
+            OperationOutput output = OperationOutput.newBuilder().setResponse(Response.valueOf(request.getCurrency().getNumber())).build();
+            responseObserver.onNext(output);
+            responseObserver.onCompleted();
         }
 
         @Override

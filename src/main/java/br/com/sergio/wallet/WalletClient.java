@@ -24,10 +24,10 @@ public class WalletClient {
         channel.shutdown().awaitTermination(5,TimeUnit.SECONDS);
     }
 
-    public void deposit(double value, Currency currency){
-        logger.info("Trying to deposit" + value);
+    public void deposit(int userId, double value, Currency currency){
+        logger.info("Trying to deposit " + value + " on currency " + currency.getValueDescriptor());
         try{
-            OperationInput input = OperationInput.newBuilder().setAmount(value).setCurrency(currency).build();
+            OperationInput input = OperationInput.newBuilder().setUserId(userId).setAmount(value).setCurrency(currency).build();
             OperationOutput output = blockingStub.deposit(input);
             logger.info("Response: " + output.getResponseValue());
         }catch(RuntimeException e){
@@ -38,11 +38,14 @@ public class WalletClient {
 
     public static void main(String[] args) throws Exception{
         WalletClient client = new WalletClient("localhost",4242);
-        double value = args.length > 0 ? Double.parseDouble(args[0]) : 100.00;
-        Currency currency = args.length > 0 ? Currency.valueOf(args[1]) : Currency.EUR;
+        logger.info(String.format("args passed: %s %s %s", args[0],args[1],args[2] ));
+        int userId = args.length > 0 ? Integer.parseInt(args[0]) : 1;
+        double value = args.length > 0 ? Double.parseDouble(args[1]) : 100.00;
+
+        Currency currency = args.length > 0 ? Currency.forNumber(Integer.parseInt(args[2])) : Currency.UNRECOGNIZED;
 
         try{
-            client.deposit(value,currency);
+            client.deposit(userId,value,currency);
         }finally {
             client.shutdown();
         }
