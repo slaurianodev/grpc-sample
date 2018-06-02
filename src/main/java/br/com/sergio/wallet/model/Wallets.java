@@ -1,9 +1,6 @@
 package br.com.sergio.wallet.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name="wallets")
@@ -11,11 +8,13 @@ public class Wallets {
     @Id
     @Column(name="wallet_id")
     private int walletId;
-    @Column(name="user_id")
+    @ManyToOne
+    @JoinColumn(name="user_id")
     private Users user;
     @Column(name="amount")
     private double amount;
-    @Column(name="currency_id")
+    @ManyToOne
+    @JoinColumn(name="currency_id")
     private Currencies currency;
 
     public int getWalletId() {
