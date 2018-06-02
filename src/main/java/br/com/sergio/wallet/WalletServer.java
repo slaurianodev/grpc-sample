@@ -2,7 +2,11 @@ package br.com.sergio.wallet;
 
 
 
+import br.com.sergio.wallet.model.Currencies;
 import br.com.sergio.wallet.model.Users;
+import br.com.sergio.wallet.model.Wallets;
+import br.com.sergio.wallet.service.GenericServiceImpl;
+import br.com.sergio.wallet.service.IGenericService;
 import br.com.sergio.wallet.util.HibernateUtil;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -12,7 +16,9 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
@@ -74,11 +80,23 @@ public class WalletServer {
                 response = Response.OK_VALUE;
             }
 
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Criteria criteria = session.createCriteria(Users.class);
-            criteria.add(Restrictions.eq("userId",request.getUserId()));
-            List<Users> user = criteria.list();
-            logger.info("User: " + user);
+            IGenericService<Users> userService = new GenericServiceImpl<Users>(Users.class,HibernateUtil.getSessionFactory());
+            IGenericService<Currencies> currencyService = new GenericServiceImpl<Currencies>(Currencies.class,HibernateUtil.getSessionFactory());
+            IGenericService<Wallets> walletService = new GenericServiceImpl<Wallets>(Wallets.class,HibernateUtil.getSessionFactory());
+
+            Users user = userService.get(Users.class,request.getUserId());
+            Currencies cur = currencyService.get(Currencies.class,request.getCurrency().getNumber());
+
+            HashMap<String, Object> params = new HashMap<String,Object>();
+            params.put("uId",user.getUserId());
+            params.put("cId",cur.getCurrencyId());
+
+            List<Wallets> wallet = walletService.query("select w from Wallets w inner join Users u on u.userId=w.userId " +
+                    "inner join Currency c on c.currencyId=w.currencyId where u.userId = :uId and c.currencyId = :cId",params);
+
+
+            logger.info(String.format("User: %s, Currency: %s, Amount: %s", wallet.get(0).getUser().getUserName(),
+                    wallet.get(0).getCurrency().getCurrencyCode(), wallet.get(0).getAmount()));
 
             OperationOutput output = OperationOutput.newBuilder().setResponse(Response.forNumber(response)).build();
             logger.info("Output: "+output.toString());
