@@ -57,7 +57,18 @@ public class WalletServer {
     private class OperationsGrpcImpl extends OperationsGrpc.OperationsImplBase {
         @Override
         public void deposit(OperationInput request,StreamObserver<OperationOutput> responseObserver) {
-            OperationOutput output = OperationOutput.newBuilder().setResponse(Response.valueOf(request.getCurrency().getNumber())).build();
+            logger.info("Currency: " + request.getCurrency());
+            int response = 0;
+            Currency currency = request.getCurrency();
+
+            if(currency.UNRECOGNIZED.equals(currency)){
+                response = Response.UNRECOGNIZED.getNumber();
+            }else {
+                response = Response.OK_VALUE;
+            }
+
+            OperationOutput output = OperationOutput.newBuilder().setResponse(Response.forNumber(response)).build();
+            logger.info("Output: "+output.toString());
             responseObserver.onNext(output);
             responseObserver.onCompleted();
         }

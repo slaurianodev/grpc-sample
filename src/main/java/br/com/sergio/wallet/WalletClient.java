@@ -38,12 +38,26 @@ public class WalletClient {
 
     public static void main(String[] args) throws Exception{
         WalletClient client = new WalletClient("localhost",4242);
-        logger.info(String.format("args passed: %s %s %s", args[0],args[1],args[2] ));
-        int userId = args.length > 0 ? Integer.parseInt(args[0]) : 1;
-        double value = args.length > 0 ? Double.parseDouble(args[1]) : 100.00;
+        int userId = 1;
+        double value = 100.00;
+        Currency currency = Currency.UNRECOGNIZED;
 
-        Currency currency = args.length > 0 ? Currency.forNumber(Integer.parseInt(args[2])) : Currency.UNRECOGNIZED;
+        for(int i=0; i < args.length; i++){
+            if(Integer.parseInt(args[i]) == 0 ){
+                userId = Integer.parseInt(args[0]);
+            }
+            if(args[1] != null){
+                value = Double.parseDouble(args[1]);
+            }
+            if(args[2] != null){
+                currency = Currency.forNumber(Integer.parseInt(args[2]));
+            }
+        }
 
+        if(args.length > 0 && args.length <=3){
+
+
+        }
         try{
             client.deposit(userId,value,currency);
         }finally {
