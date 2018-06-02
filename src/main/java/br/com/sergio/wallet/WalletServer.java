@@ -1,11 +1,18 @@
 package br.com.sergio.wallet;
 
 
+
+import br.com.sergio.wallet.model.Users;
+import br.com.sergio.wallet.util.HibernateUtil;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
@@ -66,6 +73,12 @@ public class WalletServer {
             }else {
                 response = Response.OK_VALUE;
             }
+
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            Criteria criteria = session.createCriteria(Users.class);
+            criteria.add(Restrictions.eq("userId",request.getUserId()));
+            List<Users> user = criteria.list();
+            logger.info("User: " + user);
 
             OperationOutput output = OperationOutput.newBuilder().setResponse(Response.forNumber(response)).build();
             logger.info("Output: "+output.toString());

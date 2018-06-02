@@ -1,4 +1,4 @@
-package br.com.sergio.wallet.br.com.sergio.wallet.model;
+package br.com.sergio.wallet.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
