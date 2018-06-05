@@ -1,10 +1,12 @@
 package br.com.sergio.wallet.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name="wallets")
-public class Wallets {
+public class Wallets implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @Column(name="wallet_id")
     private int walletId;

@@ -1,9 +1,10 @@
 package br.com.sergio.wallet.dao;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public interface IGenericDAO<T> {
+public interface IGenericDAO<T extends Serializable  > {
     public T get(Class<T> cl, Integer id);
     public T save(T object);
     public void update(T object);

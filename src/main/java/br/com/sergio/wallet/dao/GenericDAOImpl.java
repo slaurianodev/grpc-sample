@@ -1,5 +1,6 @@
 package br.com.sergio.wallet.dao;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-public class GenericDAOImpl<T> implements IGenericDAO<T> {
+public class GenericDAOImpl<T extends Object & Serializable> implements IGenericDAO<T> {
     private SessionFactory sessionFactory;
 
     public GenericDAOImpl(Class<T> cl, SessionFactory sessionFactory) {

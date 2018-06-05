@@ -4,10 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name="currencies")
-public class Currencies {
+public class Currencies implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @Column(name="currency_id")
     private int currencyId;

@@ -1,15 +1,15 @@
 package br.com.sergio.wallet.service;
 
-import java.util.List;
-import java.util.Map;
-
-
 import br.com.sergio.wallet.dao.GenericDAOImpl;
 import br.com.sergio.wallet.dao.IGenericDAO;
 import org.hibernate.SessionFactory;
 
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
-public class GenericServiceImpl<T> implements IGenericService<T> {
+
+public class GenericServiceImpl<T extends Serializable> implements IGenericService<T> {
 
     private IGenericDAO<T> dao;
     private Class<T> cl;
