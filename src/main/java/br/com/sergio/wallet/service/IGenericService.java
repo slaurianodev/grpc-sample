@@ -1,12 +1,13 @@
 package br.com.sergio.wallet.service;
 
-import br.com.sergio.wallet.dao.IGenericDAO;
+import br.com.sergio.wallet.BalanceInput;
+import br.com.sergio.wallet.BalanceOutput;
+import br.com.sergio.wallet.OperationInput;
 
 import java.io.Serializable;
-import java.util.List;
 
-
-public interface IGenericService<T extends Serializable> extends IGenericDAO<T> {
-    List<T> getAll();
-    void deleteAll();
+public interface IGenericService <T extends Serializable>{
+    public int doProcess(OperationInput operationRequest, BalanceInput balanceRequest, String process);
+    public void initDAOs();
+    public void closeSessions();
 }

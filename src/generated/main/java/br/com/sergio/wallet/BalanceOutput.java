@@ -16,6 +16,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private BalanceOutput() {
+    response_ = 0;
     eur_ = 0D;
     usd_ = 0D;
     gbp_ = 0D;
@@ -52,17 +53,23 @@ private static final long serialVersionUID = 0L;
             }
             break;
           }
-          case 9: {
+          case 8: {
+            int rawValue = input.readEnum();
 
-            eur_ = input.readDouble();
+            response_ = rawValue;
             break;
           }
           case 17: {
 
-            usd_ = input.readDouble();
+            eur_ = input.readDouble();
             break;
           }
           case 25: {
+
+            usd_ = input.readDouble();
+            break;
+          }
+          case 33: {
 
             gbp_ = input.readDouble();
             break;
@@ -91,28 +98,44 @@ private static final long serialVersionUID = 0L;
             br.com.sergio.wallet.BalanceOutput.class, br.com.sergio.wallet.BalanceOutput.Builder.class);
   }
 
-  public static final int EUR_FIELD_NUMBER = 1;
+  public static final int RESPONSE_FIELD_NUMBER = 1;
+  private int response_;
+  /**
+   * <code>.wallet.Response response = 1;</code>
+   */
+  public int getResponseValue() {
+    return response_;
+  }
+  /**
+   * <code>.wallet.Response response = 1;</code>
+   */
+  public br.com.sergio.wallet.Response getResponse() {
+    br.com.sergio.wallet.Response result = br.com.sergio.wallet.Response.valueOf(response_);
+    return result == null ? br.com.sergio.wallet.Response.UNRECOGNIZED : result;
+  }
+
+  public static final int EUR_FIELD_NUMBER = 2;
   private double eur_;
   /**
-   * <code>double eur = 1;</code>
+   * <code>double eur = 2;</code>
    */
   public double getEur() {
     return eur_;
   }
 
-  public static final int USD_FIELD_NUMBER = 2;
+  public static final int USD_FIELD_NUMBER = 3;
   private double usd_;
   /**
-   * <code>double usd = 2;</code>
+   * <code>double usd = 3;</code>
    */
   public double getUsd() {
     return usd_;
   }
 
-  public static final int GBP_FIELD_NUMBER = 3;
+  public static final int GBP_FIELD_NUMBER = 4;
   private double gbp_;
   /**
-   * <code>double gbp = 3;</code>
+   * <code>double gbp = 4;</code>
    */
   public double getGbp() {
     return gbp_;
@@ -130,14 +153,17 @@ private static final long serialVersionUID = 0L;
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (response_ != br.com.sergio.wallet.Response.OK.getNumber()) {
+      output.writeEnum(1, response_);
+    }
     if (eur_ != 0D) {
-      output.writeDouble(1, eur_);
+      output.writeDouble(2, eur_);
     }
     if (usd_ != 0D) {
-      output.writeDouble(2, usd_);
+      output.writeDouble(3, usd_);
     }
     if (gbp_ != 0D) {
-      output.writeDouble(3, gbp_);
+      output.writeDouble(4, gbp_);
     }
     unknownFields.writeTo(output);
   }
@@ -147,17 +173,21 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
+    if (response_ != br.com.sergio.wallet.Response.OK.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(1, response_);
+    }
     if (eur_ != 0D) {
       size += com.google.protobuf.CodedOutputStream
-        .computeDoubleSize(1, eur_);
+        .computeDoubleSize(2, eur_);
     }
     if (usd_ != 0D) {
       size += com.google.protobuf.CodedOutputStream
-        .computeDoubleSize(2, usd_);
+        .computeDoubleSize(3, usd_);
     }
     if (gbp_ != 0D) {
       size += com.google.protobuf.CodedOutputStream
-        .computeDoubleSize(3, gbp_);
+        .computeDoubleSize(4, gbp_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -175,6 +205,7 @@ private static final long serialVersionUID = 0L;
     br.com.sergio.wallet.BalanceOutput other = (br.com.sergio.wallet.BalanceOutput) obj;
 
     boolean result = true;
+    result = result && response_ == other.response_;
     result = result && (
         java.lang.Double.doubleToLongBits(getEur())
         == java.lang.Double.doubleToLongBits(
@@ -198,6 +229,8 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + RESPONSE_FIELD_NUMBER;
+    hash = (53 * hash) + response_;
     hash = (37 * hash) + EUR_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         java.lang.Double.doubleToLongBits(getEur()));
@@ -336,6 +369,8 @@ private static final long serialVersionUID = 0L;
     }
     public Builder clear() {
       super.clear();
+      response_ = 0;
+
       eur_ = 0D;
 
       usd_ = 0D;
@@ -364,6 +399,7 @@ private static final long serialVersionUID = 0L;
 
     public br.com.sergio.wallet.BalanceOutput buildPartial() {
       br.com.sergio.wallet.BalanceOutput result = new br.com.sergio.wallet.BalanceOutput(this);
+      result.response_ = response_;
       result.eur_ = eur_;
       result.usd_ = usd_;
       result.gbp_ = gbp_;
@@ -408,6 +444,9 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(br.com.sergio.wallet.BalanceOutput other) {
       if (other == br.com.sergio.wallet.BalanceOutput.getDefaultInstance()) return this;
+      if (other.response_ != 0) {
+        setResponseValue(other.getResponseValue());
+      }
       if (other.getEur() != 0D) {
         setEur(other.getEur());
       }
@@ -444,15 +483,59 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
+    private int response_ = 0;
+    /**
+     * <code>.wallet.Response response = 1;</code>
+     */
+    public int getResponseValue() {
+      return response_;
+    }
+    /**
+     * <code>.wallet.Response response = 1;</code>
+     */
+    public Builder setResponseValue(int value) {
+      response_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.wallet.Response response = 1;</code>
+     */
+    public br.com.sergio.wallet.Response getResponse() {
+      br.com.sergio.wallet.Response result = br.com.sergio.wallet.Response.valueOf(response_);
+      return result == null ? br.com.sergio.wallet.Response.UNRECOGNIZED : result;
+    }
+    /**
+     * <code>.wallet.Response response = 1;</code>
+     */
+    public Builder setResponse(br.com.sergio.wallet.Response value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      response_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.wallet.Response response = 1;</code>
+     */
+    public Builder clearResponse() {
+      
+      response_ = 0;
+      onChanged();
+      return this;
+    }
+
     private double eur_ ;
     /**
-     * <code>double eur = 1;</code>
+     * <code>double eur = 2;</code>
      */
     public double getEur() {
       return eur_;
     }
     /**
-     * <code>double eur = 1;</code>
+     * <code>double eur = 2;</code>
      */
     public Builder setEur(double value) {
       
@@ -461,7 +544,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>double eur = 1;</code>
+     * <code>double eur = 2;</code>
      */
     public Builder clearEur() {
       
@@ -472,13 +555,13 @@ private static final long serialVersionUID = 0L;
 
     private double usd_ ;
     /**
-     * <code>double usd = 2;</code>
+     * <code>double usd = 3;</code>
      */
     public double getUsd() {
       return usd_;
     }
     /**
-     * <code>double usd = 2;</code>
+     * <code>double usd = 3;</code>
      */
     public Builder setUsd(double value) {
       
@@ -487,7 +570,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>double usd = 2;</code>
+     * <code>double usd = 3;</code>
      */
     public Builder clearUsd() {
       
@@ -498,13 +581,13 @@ private static final long serialVersionUID = 0L;
 
     private double gbp_ ;
     /**
-     * <code>double gbp = 3;</code>
+     * <code>double gbp = 4;</code>
      */
     public double getGbp() {
       return gbp_;
     }
     /**
-     * <code>double gbp = 3;</code>
+     * <code>double gbp = 4;</code>
      */
     public Builder setGbp(double value) {
       
@@ -513,7 +596,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>double gbp = 3;</code>
+     * <code>double gbp = 4;</code>
      */
     public Builder clearGbp() {
       

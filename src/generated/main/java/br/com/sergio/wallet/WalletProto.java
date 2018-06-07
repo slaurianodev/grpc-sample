@@ -47,17 +47,19 @@ public final class WalletProto {
       "\022\017\n\007user_id\030\001 \001(\r\022\016\n\006amount\030\002 \001(\001\022\"\n\010cur" +
       "rency\030\003 \001(\0162\020.wallet.Currency\"5\n\017Operati" +
       "onOutput\022\"\n\010response\030\001 \001(\0162\020.wallet.Resp" +
-      "onse\"\037\n\014BalanceInput\022\017\n\007user_id\030\001 \001(\r\"6\n" +
-      "\rBalanceOutput\022\013\n\003eur\030\001 \001(\001\022\013\n\003usd\030\002 \001(\001" +
-      "\022\013\n\003gbp\030\003 \001(\001*%\n\010Currency\022\007\n\003EUR\020\000\022\007\n\003US" +
-      "D\020\001\022\007\n\003GBP\020\002*(\n\010Response\022\006\n\002OK\020\000\022\024\n\020UNKN" +
-      "OWN_CURRENCY\020\0012\275\001\n\nOperations\022:\n\007Deposit" +
-      "\022\026.wallet.OperationInput\032\027.wallet.Operat" +
-      "ionOutput\022;\n\010Withdraw\022\026.wallet.Operation" +
-      "Input\032\027.wallet.OperationOutput\0226\n\007Balanc" +
-      "e\022\024.wallet.BalanceInput\032\025.wallet.Balance" +
-      "OutputB+\n\024br.com.sergio.walletB\013WalletPr" +
-      "otoP\001\242\002\003WLTb\006proto3"
+      "onse\"\037\n\014BalanceInput\022\017\n\007user_id\030\001 \001(\r\"Z\n" +
+      "\rBalanceOutput\022\"\n\010response\030\001 \001(\0162\020.walle" +
+      "t.Response\022\013\n\003eur\030\002 \001(\001\022\013\n\003usd\030\003 \001(\001\022\013\n\003" +
+      "gbp\030\004 \001(\001*%\n\010Currency\022\007\n\003EUR\020\000\022\007\n\003USD\020\001\022" +
+      "\007\n\003GBP\020\002*R\n\010Response\022\006\n\002OK\020\000\022\024\n\020UNKNOWN_" +
+      "CURRENCY\020\001\022\026\n\022INSUFFICIENT_FUNDS\020\002\022\020\n\014UN" +
+      "KNOWN_USER\020\0032\275\001\n\nOperations\022:\n\007Deposit\022\026" +
+      ".wallet.OperationInput\032\027.wallet.Operatio" +
+      "nOutput\022;\n\010Withdraw\022\026.wallet.OperationIn" +
+      "put\032\027.wallet.OperationOutput\0226\n\007Balance\022" +
+      "\024.wallet.BalanceInput\032\025.wallet.BalanceOu" +
+      "tputB+\n\024br.com.sergio.walletB\013WalletProt" +
+      "oP\001\242\002\003WLTb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -94,7 +96,7 @@ public final class WalletProto {
     internal_static_wallet_BalanceOutput_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_wallet_BalanceOutput_descriptor,
-        new java.lang.String[] { "Eur", "Usd", "Gbp", });
+        new java.lang.String[] { "Response", "Eur", "Usd", "Gbp", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

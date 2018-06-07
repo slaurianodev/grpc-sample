@@ -2,19 +2,28 @@ package br.com.sergio.wallet;
 
 
 
+import br.com.sergio.wallet.dao.CurrenciesDAO;
+import br.com.sergio.wallet.dao.UsersDAO;
+import br.com.sergio.wallet.dao.WalletsDAO;
 import br.com.sergio.wallet.model.Currencies;
 import br.com.sergio.wallet.model.Users;
 import br.com.sergio.wallet.model.Wallets;
-import br.com.sergio.wallet.service.GenericServiceImpl;
-import br.com.sergio.wallet.service.IGenericService;
+import br.com.sergio.wallet.service.BalanceService;
+import br.com.sergio.wallet.service.DepositService;
+import br.com.sergio.wallet.service.WithdrawService;
+import br.com.sergio.wallet.util.Amounts;
 import br.com.sergio.wallet.util.HibernateUtil;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
@@ -66,49 +75,35 @@ public class WalletServer {
     private class OperationsGrpcImpl extends OperationsGrpc.OperationsImplBase {
         @Override
         public void deposit(OperationInput request,StreamObserver<OperationOutput> responseObserver) {
-            logger.info("Currency: " + request.getCurrency());
-            int response = 0;
-            Currency currency = request.getCurrency();
+            DepositService depositService = new DepositService();
+            int result = depositService.doProcess(request,null,"deposit");
 
-            if(currency.UNRECOGNIZED.equals(currency)){
-                response = Response.UNRECOGNIZED.getNumber();
-            }else {
-                response = Response.OK_VALUE;
-
-                IGenericService<Users> userService = new GenericServiceImpl<Users>(Users.class, HibernateUtil.getSessionFactory());
-                IGenericService<Currencies> currencyService = new GenericServiceImpl<Currencies>(Currencies.class, HibernateUtil.getSessionFactory());
-                IGenericService<Wallets> walletService = new GenericServiceImpl<Wallets>(Wallets.class, HibernateUtil.getSessionFactory());
-
-                Users user = userService.get(Users.class, request.getUserId());
-                Currencies cur = currencyService.get(Currencies.class, request.getCurrency().getNumber());
-
-                HashMap<String, Object> params = new HashMap<String, Object>();
-                params.put("uId", user.getUserId());
-                params.put("cId", cur.getCurrencyId());
-
-                List<Wallets> wallet = walletService.query("from Wallets w inner join w.user as u " +
-                        "inner join w.currency as c where u.userId = :uId and c.currencyId = :cId", params);
-
-                logger.info(wallet.getClass().toString());
-                if (wallet != null) {
-                    Wallets updWallet = wallet.iterator().next();
-                    updWallet.setAmount(updWallet.getAmount() + request.getAmount());
-                    walletService.update(updWallet);
-                }
-            }
-            OperationOutput output = OperationOutput.newBuilder().setResponse(Response.forNumber(response)).build();
+            OperationOutput output = OperationOutput.newBuilder().setResponse(Response.forNumber(result)).build();
             responseObserver.onNext(output);
             responseObserver.onCompleted();
         }
 
         @Override
         public void withdraw(OperationInput request, StreamObserver<OperationOutput> responseObserver) {
-            asyncUnimplementedUnaryCall(OperationsGrpc.getWithdrawMethod(), responseObserver);
+            WithdrawService withdrawService = new WithdrawService();
+            int result = withdrawService.doProcess(request,null,"withdraw");
+
+            OperationOutput output = OperationOutput.newBuilder().setResponse(Response.forNumber(result)).build();
+            responseObserver.onNext(output);
+            responseObserver.onCompleted();
         }
 
         @Override
         public void balance(BalanceInput request,StreamObserver<BalanceOutput> responseObserver) {
-            asyncUnimplementedUnaryCall(OperationsGrpc.getBalanceMethod(), responseObserver);
+            BalanceService balanceService = new BalanceService();
+            int result = balanceService.doProcess(null,request,"balance");
+            double amountEur = (double) balanceService.getAmounts().get(Currency.EUR.getValueDescriptor().getName());
+            double amountUsd =(double) balanceService.getAmounts().get(Currency.USD.getValueDescriptor().getName());
+            double amountGbp =(double) balanceService.getAmounts().get(Currency.GBP.getValueDescriptor().getName());
+
+            BalanceOutput output = BalanceOutput.newBuilder().setResponseValue(result).setEur(amountEur).setUsd(amountUsd).setGbp(amountGbp).build();
+            responseObserver.onNext(output);
+            responseObserver.onCompleted();
         }
 
     }

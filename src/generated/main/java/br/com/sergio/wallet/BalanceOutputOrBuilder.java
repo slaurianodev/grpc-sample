@@ -8,17 +8,26 @@ public interface BalanceOutputOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>double eur = 1;</code>
+   * <code>.wallet.Response response = 1;</code>
+   */
+  int getResponseValue();
+  /**
+   * <code>.wallet.Response response = 1;</code>
+   */
+  br.com.sergio.wallet.Response getResponse();
+
+  /**
+   * <code>double eur = 2;</code>
    */
   double getEur();
 
   /**
-   * <code>double usd = 2;</code>
+   * <code>double usd = 3;</code>
    */
   double getUsd();
 
   /**
-   * <code>double gbp = 3;</code>
+   * <code>double gbp = 4;</code>
    */
   double getGbp();
 }

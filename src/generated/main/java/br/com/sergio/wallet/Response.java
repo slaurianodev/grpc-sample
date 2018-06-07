@@ -16,6 +16,14 @@ public enum Response
    * <code>UNKNOWN_CURRENCY = 1;</code>
    */
   UNKNOWN_CURRENCY(1),
+  /**
+   * <code>INSUFFICIENT_FUNDS = 2;</code>
+   */
+  INSUFFICIENT_FUNDS(2),
+  /**
+   * <code>UNKNOWN_USER = 3;</code>
+   */
+  UNKNOWN_USER(3),
   UNRECOGNIZED(-1),
   ;
 
@@ -27,6 +35,14 @@ public enum Response
    * <code>UNKNOWN_CURRENCY = 1;</code>
    */
   public static final int UNKNOWN_CURRENCY_VALUE = 1;
+  /**
+   * <code>INSUFFICIENT_FUNDS = 2;</code>
+   */
+  public static final int INSUFFICIENT_FUNDS_VALUE = 2;
+  /**
+   * <code>UNKNOWN_USER = 3;</code>
+   */
+  public static final int UNKNOWN_USER_VALUE = 3;
 
 
   public final int getNumber() {
@@ -49,6 +65,8 @@ public enum Response
     switch (value) {
       case 0: return OK;
       case 1: return UNKNOWN_CURRENCY;
+      case 2: return INSUFFICIENT_FUNDS;
+      case 3: return UNKNOWN_USER;
       default: return null;
     }
   }

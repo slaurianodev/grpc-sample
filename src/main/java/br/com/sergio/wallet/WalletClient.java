@@ -25,7 +25,6 @@ public class WalletClient {
     }
 
     public void deposit(int userId, double value, Currency currency){
-        logger.info("Trying to deposit " + value + " on currency " + currency.getValueDescriptor());
         try{
             OperationInput input = OperationInput.newBuilder().setUserId(userId).setAmount(value).setCurrency(currency).build();
             OperationOutput output = blockingStub.deposit(input);
@@ -36,34 +35,68 @@ public class WalletClient {
 
     }
 
+    public void withdraw(int userId, double value, Currency currency){
+        try{
+            OperationInput input = OperationInput.newBuilder().setUserId(userId).setAmount(value).setCurrency(currency).build();
+            OperationOutput output = blockingStub.withdraw(input);
+            logger.info("Response: " + output.getResponseValue());
+        }catch(RuntimeException e){
+            logger.log(Level.WARNING,"Request to grpc server failed",e);
+        }
+
+    }
+
+    public void balance (int userId){
+        try{
+            BalanceInput input = BalanceInput.newBuilder().setUserId(userId).build();
+            BalanceOutput output = blockingStub.balance(input);
+            logger.info(String.format("Response: %s EUR: %10.2f USD: %10.2f GBP: %10.2f" ,  output.getResponseValue(), output.getEur() , output.getUsd() , output.getGbp()));
+        }catch(RuntimeException e){
+            logger.log(Level.WARNING,"Request to grpc server failed",e);
+        }
+    }
+
     public static void main(String[] args) throws Exception{
         WalletClient client = new WalletClient("localhost",4242);
-        int userId = 1;
-        double value = 100.00;
-        Currency currency = Currency.UNRECOGNIZED;
 
-        for(int i=0; i < args.length; i++){
-            if(Integer.parseInt(args[i]) == 0 ){
-                userId = Integer.parseInt(args[0]);
-            }
-            if(args[1] != null){
-                value = Double.parseDouble(args[1]);
-            }
-            if(args[2] != null){
-                currency = Currency.forNumber(Integer.parseInt(args[2]));
-            }
-        }
-
-        if(args.length > 0 && args.length <=3){
-
-
-        }
         try{
-            client.deposit(userId,value,currency);
+            int op = Integer.parseInt(args[0]);
+            String checkOperation = operation(op);
+            if(checkOperation.equals("deposit")){
+                int userId = Integer.parseInt(args[1]);
+                double value = Double.parseDouble(args[2]);
+                Currency currency =  Currency.forNumber(Integer.parseInt(args[3])) != null ? Currency.forNumber(Integer.parseInt(args[3])) : Currency.UNRECOGNIZED;
+                client.deposit(userId,value,currency);
+            } else if(checkOperation.equals("withdraw")){
+                int userId = Integer.parseInt(args[1]);
+                double value = Double.parseDouble(args[2]);
+                Currency currency =  Currency.forNumber(Integer.parseInt(args[3])) != null ? Currency.forNumber(Integer.parseInt(args[3])) : Currency.UNRECOGNIZED;
+                client.withdraw(userId,value,currency);
+            } else if(checkOperation.equals("balance")){
+                int userId = Integer.parseInt(args[1]);
+                client.balance(userId);
+            }
+
         }finally {
             client.shutdown();
         }
 
+    }
+
+    private static String operation(int op){
+        String operation = "";
+        switch (op){
+            case 1:
+                operation = "deposit";
+                break;
+            case 2:
+                operation = "withdraw";
+                break;
+            case 3:
+                operation = "balance";
+                break;
+        }
+        return operation;
     }
 
 }

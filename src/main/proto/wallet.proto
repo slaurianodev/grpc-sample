@@ -1,5 +1,4 @@
 syntax = "proto3";
-//package wallet;
 
 option java_multiple_files = true;
 option java_package = "br.com.sergio.wallet";
@@ -23,6 +22,8 @@ enum Currency {
 enum Response {
     OK = 0;
     UNKNOWN_CURRENCY = 1;
+    INSUFFICIENT_FUNDS = 2;
+    UNKNOWN_USER = 3;
 }
 
 message OperationInput {
@@ -40,8 +41,9 @@ message BalanceInput {
 }
 
 message BalanceOutput {
-    double eur = 1;
-    double usd = 2;
-    double gbp = 3;
+    Response response = 1;
+    double eur = 2;
+    double usd = 3;
+    double gbp = 4;
 }
 

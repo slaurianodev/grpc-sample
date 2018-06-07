@@ -1,14 +1,18 @@
 package br.com.sergio.wallet.dao;
 
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 public interface IGenericDAO<T extends Serializable  > {
-    public T get(Class<T> cl, Integer id);
-    public T save(T object);
-    public void update(T object);
-    public void delete(T object);
-    public List<T> query(String hsql, Map<String, Object> params);
+
+    public void initDAOSession();
+    public T getById(Integer id);
+    public void saveOrUpdate(T object);
+    public List<T> list(Criteria criteria);
+    public void closeSession();
 
 }
