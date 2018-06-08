@@ -2,9 +2,8 @@ package br.com.sergio.wallet.dao;
 
 import br.com.sergio.wallet.model.Currencies;
 import br.com.sergio.wallet.util.HibernateUtil;
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 
 import java.util.List;
 
@@ -19,10 +18,7 @@ public class CurrenciesDAO implements IGenericDAO<Currencies> {
 
     @Override
     public Currencies getById(Integer id) {
-        Criteria criteria = this.session.createCriteria(Currencies.class);
-        criteria.add(Restrictions.eq("CurrenciesId", id));
-        Currencies currency = (Currencies) criteria.uniqueResult();
-        return currency;
+        return this.session.get(Currencies.class,id);
     }
 
     @Override
@@ -32,20 +28,16 @@ public class CurrenciesDAO implements IGenericDAO<Currencies> {
         session.getTransaction().commit();
     }
 
-    @Override
-    public List<Currencies> list(Criteria criteria) {
-        return criteria.list();
+    public Currencies getByCurrencyCode(String currencyCode){
+        Query query = session.createQuery("from Currencies where currencyCode = :code");
+        query.setParameter("code",currencyCode);
+
+        return (Currencies) query.uniqueResult();
     }
 
-    public Currencies getByCurrencyCode(String currencyCode){
-        Criteria criteria = session.createCriteria(Currencies.class);
-        criteria.add(Restrictions.eq("currencyCode", currencyCode));
-        List<Currencies> result = list(criteria);
-        if(result != null) {
-            return result.get(0);
-        }else{
-            return null;
-        }
+    public List<Currencies> listAll(){
+        Query query = session.createQuery("from Currencies");
+        return query.list();
     }
 
     public Session getSession() {

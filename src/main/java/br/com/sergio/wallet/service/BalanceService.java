@@ -76,8 +76,7 @@ public class BalanceService implements IGenericService {
 
     private void initAmounts(){
         amounts = new HashMap<String, Object>();
-        Criteria criteria = currenciesDAO.getSession().createCriteria(Currencies.class);
-        List<Currencies> currencies = currenciesDAO.list(criteria);
+        List<Currencies> currencies = currenciesDAO.listAll();
         currencies.forEach(c -> amounts.put(c.getCurrencyCode(),0.00));
     }
 

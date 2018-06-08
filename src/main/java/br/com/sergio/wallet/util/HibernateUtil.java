@@ -1,23 +1,21 @@
 package br.com.sergio.wallet.util;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 
 
 public class HibernateUtil {
     private static SessionFactory sessionFactory;
-    static {
-        try{
-            Configuration configuration = new Configuration().configure();
-            StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
-            sessionFactory = configuration.buildSessionFactory(builder.build());
-        }catch(Exception e){
-            e.printStackTrace();
-        }
 
-    }
-    public static SessionFactory getSessionFactory(){
-        return sessionFactory;
-    }
+    public static SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            StandardServiceRegistry standardRegistry = new StandardServiceRegistryBuilder().configure().build();
+            Metadata metadata = new MetadataSources(standardRegistry).getMetadataBuilder().build();
+            sessionFactory = metadata.getSessionFactoryBuilder().build();
+        }
+    return sessionFactory;
+}
 }
